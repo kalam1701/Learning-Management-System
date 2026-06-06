@@ -50,4 +50,45 @@ const getCourseByid = async (req,res) => {
     }
 };
 
-module.exports = {createCourse , getAllCourses , getCourseByid };
+//-------Enroll in course (student only)-----------
+
+const enrollCourse = async (req,res ) => {
+    try {
+        //Check if the person is a student 
+        if(req.user.role !== "student" ){
+            res.status(403).json({message : "only student can enroll "});
+        }
+
+        const course = await Course.findById(req.params.id);
+
+        if(!course){
+            return res.status(404).json({message : "Course not found "});
+        }
+
+        //Check if the student is already enrolled 
+        const alreadyEnrolled = course.students.includes(req.user.id);
+        if(alreadyEnrolled){
+            return res.status(400).json({message: "Already enrolled in this course  "});
+        }
+
+        course.students.push(req.user.id);
+        await course.save();
+
+        res.status(200).json({message :" Enrolled Sucessfully" , course});
+
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+//--------GET MY ENROLLED COURSES (student)-----------
+const getMyCourses = async (req,res) => {
+    try {
+        //Find all courses where student array contains this userd  id 
+        const courses = await Course.find({students: req.user.id}).populate("instructor" ,"name email");
+        res.status(200).json(courses);
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+};
+module.exports = {createCourse , getAllCourses , getCourseByid , enrollCourse , getMyCourses};
