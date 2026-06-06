@@ -39,7 +39,7 @@ const getAllCourses = async(req , res)=>{
 //----------Get single Course------------
 const getCourseByid = async (req,res) => {
     try {
-        const course = await Course.findById(req.params.id).populate("instructor" , "name , email");
+        const course = await Course.findById(req.params.id).populate("instructor" , "name , email").populate("students" , "name email");
 
         if(!course){
             return res.status(404).json({message : "Course not fond"});
@@ -85,7 +85,7 @@ const enrollCourse = async (req,res ) => {
 const getMyCourses = async (req,res) => {
     try {
         //Find all courses where student array contains this userd  id 
-        const courses = await Course.find({students: req.user.id}).populate("instructor" ,"name email");
+        const courses = await Course.find({students: req.user.id}).populate("instructor" ,"name email").populate("students" ,"name email" );
         res.status(200).json(courses);
     } catch (error) {
         res.status(500).json({message: error.message})
