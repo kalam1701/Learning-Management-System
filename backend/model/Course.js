@@ -11,13 +11,13 @@ const courseSchema = new mongoose.Schema({
     },
     instructor:{
         type : mongoose.Schema.Types.ObjectId, //links to the user
-        ref : "userModel",                     // which model to look in 
+        ref : "User",                     // which model to look in 
         required :true
     },
     students:[
         {
             type : mongoose.Schema.Types.ObjectId,
-            ref :"userModel"
+            ref :"User"
         }
     ],
     videos :[
@@ -27,7 +27,7 @@ const courseSchema = new mongoose.Schema({
         }
     ],
     price :{
-        type : Number , 
+        type : Number ,     
         default : 0
     }
 },{timestamps : true});

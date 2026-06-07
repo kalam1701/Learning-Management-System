@@ -91,4 +91,39 @@ const getMyCourses = async (req,res) => {
         res.status(500).json({message: error.message})
     }
 };
-module.exports = {createCourse , getAllCourses , getCourseByid , enrollCourse , getMyCourses};
+
+//--------------UPLOAD VIDEO (instructor only)------------
+const uploadVideo = async (req , res) => {
+    try {
+        //only instructor can upload 
+        if(req.user.role !=="instructor"){
+            return res.status(403).json({message: "  Only Instructor can upload the Video "});
+        }
+        const course = await Course.findById(req.params.id);
+
+        if(!course){
+            return res.status(404).json({message :"Course no found"});
+        }
+        //check  if this instructor owns this course 
+        if(course.instructor.toString() !== req.user.id){
+            return res.status(403).json({message :"You did not create this Course"});
+        }
+
+        //multer already uploaded the file to cloudinary 
+        //req.file.path = the cloudinary URL
+
+        const video ={
+            title : req.body.title,
+            url : req.file.path //cloudinary gives back the URL
+        };
+
+        course.videos.push(video);
+        await course.save();
+
+        res.status(200).json({message:"Video has been uploaded"});
+    } catch (error) {
+                res.status(500).json({message: error.message });
+
+    }
+};
+module.exports = {createCourse , getAllCourses , getCourseByid , enrollCourse , getMyCourses , uploadVideo};
