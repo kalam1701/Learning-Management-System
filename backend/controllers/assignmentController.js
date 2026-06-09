@@ -55,15 +55,15 @@ const submitAssignment = async (req, res) => {
             return res.status(404).json({ message: "Assignment not found" });
         }
         // Check if already submitted
-        const alreadySubmitted = assignment.submission.find(sub => sub.student.toString() === req.user.id);
+        const alreadySubmitted = assignment.submissions.find(sub => sub.student.toString() === req.user.id);
         if (alreadySubmitted) {
             return res.status(400).json({ message: "Already submitted" });
         }
         // Check if due date passed
-        if (new Date() > Date(assignment.dueDate)) {
+        if (new Date() > new Date(assignment.dueDate)) {
             return res.status(400).json({ message: "Due date has passed" });
         }
-        assignment.submission.push({
+        assignment.submissions.push({
             student: req.user.id,
             answer: req.body.answer
         });
@@ -87,8 +87,8 @@ const gradeAssignment = async (req, res) => {
             return res.status(404).json({ message: "Assignment not found" });
         }
         // Find the student's submission
-        const submission = assignment.submission.find(
-            sub => sub.student.toString === req.params.studentId
+        const submission = assignment.submissions.find(
+            sub => sub.student.toString() === req.params.studentId
         );
         if (!submission) {
             return res.status(404).json({ message: "Submission not found" });

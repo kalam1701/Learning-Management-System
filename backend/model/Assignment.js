@@ -19,7 +19,7 @@ const assignmentSchema = new mongoose.Schema({
         ref : "User",
         required: true 
     },
-    duedate:{
+    dueDate:{
         type : Date,
         required : true
     },
@@ -30,7 +30,7 @@ const assignmentSchema = new mongoose.Schema({
                 ref : "User"
             },
             answer: String,                 //Student Answer
-            submittedAt:{
+            submittedAt :{
                 type : Date,
                 default : Date.now
             },
@@ -42,4 +42,4 @@ const assignmentSchema = new mongoose.Schema({
     ]
 },{ timestamps :true});
 
-module.exports = mongoose.Schema("Assignment", assignmentSchema);
+module.exports = mongoose.model("Assignment", assignmentSchema);
