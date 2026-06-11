@@ -8,6 +8,7 @@ const authRoutes = require("./routes/authRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const assigmentRoutes = require("./routes/assignmentRoutes")
 const quizRoutes = require("./routes/quizRoutes");
+const progressRoutes = require("./routes/progressRoutes");
 
 const app = express();
 
@@ -20,6 +21,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/courses" , courseRoutes);
 app.use("/api/courses" , assigmentRoutes);
 app.use("/api/courses", quizRoutes);
+app.use("/api/courses", progressRoutes);
+
 
 const PORT = process.env.PORT || 5000 ;
 app.listen(PORT, () => {
